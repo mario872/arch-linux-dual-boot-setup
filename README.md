@@ -106,7 +106,8 @@ sudo systemctl enable --now gdm.service
 ```
 
 #### Freebie: My Recommended Software
-The following command installs snap, flatpak, yay, 7zip, Chromium, docker, docker compose, ffmpeg, wget
+The following command installs snap, flatpak, yay (an AUR helper), 7zip, Chromium, docker, docker compose, ffmpeg, wget.
+Note that it is considered un-arch-linux-like to use an AUR help and you should probably learn how to use AUR manually yourself.
 
 ```curl -fsSL https://raw.githubusercontent.com/mario872/arch-linux-dual-boot-setup/refs/heads/main/install-recimmended-software.sh | bash```
 
