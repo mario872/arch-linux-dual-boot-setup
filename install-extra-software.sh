@@ -1,9 +1,5 @@
 echo "Note: This script needs attendance to be run"
 
-echo "## Installing Bambu Studio ##"
-yay -Sy bambustudio-bin --noconfirm --sudoloop
-echo "## Bambu Studio was installed successfully ##"
-
 echo "## Installing Opera ##"
 yay -Sy opera --noconfirm --sudoloop
 echo "## Opera was installed successfully ##"

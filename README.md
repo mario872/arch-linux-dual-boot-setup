@@ -3,10 +3,9 @@ A short guide to dual boot arch linux
 ### Set Font Size in Terminal
 Set font size command: ```setfont ter-132n```
 ### Connecting to the Internet
-Enter live wifi connection terminal interface (```iwctl```)
-Then, inside the interface, connect to wifi using this command:
+Connect to wifi using this command:
 ```iwctl --passphrase your_passphrase_here station your_device_wlan0 connect your_network_name_here```
- Exit out of here, then ```ping archlinux.org```
+ Now, ```ping archlinux.org```
  If you are receiving packets, then you're successfully connecte to the internet
  
  ### Checking EFI Boot
@@ -25,7 +24,7 @@ Then, inside the interface, connect to wifi using this command:
  
  ### Creating Partitions for Arch Linux
  #### Checking available disks
- First, run ```lsblk``` this is a command we will use a lot, which lists all drives on your system. Ignore ```loop0``` and your usb drive (usually mounted at ```/run/archiso/bootmnt```)
+ First, run ```lsblk``` this is a command we will use a lot, which lists all drives on your system. Ignore ```loop0``` and your usb drive is the drive that has the total size of your USB drive, plus or minus 1-2gb.
  Usually, the only other one is the drive you want to install arch linux on. You should have created an empty partition earlier with a size you noted down. Find this one in the list and remember it's name.
  #### Creating New Partitions
  To open the partitions editor run ```cfdisk /dev/name_of_your_DRIVE_here```. Note, don't use the PARTITION we remembered earlier, use the DISK name.
@@ -45,7 +44,7 @@ Then, inside the interface, connect to wifi using this command:
  You can now run `lsblk` to see the changes to where your partitions are mounted. You'll see that next to your swap partition it says `[SWAP]`, and next to root it says `/mnt`
  
  ### Installing OS
- To install just the base operating system, run ```pacstrap -i /mnt base base-devel linux linux-lts linux-headers linux-firmware sudo``` then write either ```intel-ucode``` or ```amd-ucode``` depending on your system. All on the same line, you can then install some recomended packages, ```nano vim git neofetch networkmanager dhcpcd pulseaudio bluez wpa_supplicant```. Then, proceed with installation! Wait some time for the command to complete and don't interrupt it.
+ To install just the base operating system, run ```pacstrap -i /mnt base base-devel linux linux-lts linux-headers linux-firmware sudo``` then write either ```intel-ucode``` or ```amd-ucode``` depending on your system. All on the same line, you can then install some recomended packages, ```nano vim git networkmanager dhcpcd pulseaudio bluez wpa_supplicant```. Then, proceed with installation! Wait some time for the command to complete and don't interrupt it.
 If you now run ```ls /mnt``` and see lots of folders, your installation has succeeded! One last command for the OS installation is  ```genfstab -U /mnt >> /mnt/etc/fstab``` which ensures that the ssd is mounted properly at boot (I Think).
 
 ### Enter newly installed OS with ```chroot```
@@ -53,9 +52,9 @@ Run the command `arch-chroot /mnt`
 #### Setting root password
 To set the root password run the command ```passwd``` and follow the prompts to create the password.
 #### Adding Normal User
-Run the command ```useradd -m your_username_here```, then add the password with ```passwd your_username_here```. Now, to add the use to important groups run ```usemod -aG wheel,storage,power,dialout,docker your_username_here```
+Run the command ```useradd -m your_username_here```, then add the password with ```passwd your_username_here```. Now, to add the use to important groups run ```usermod -aG wheel,storage,power,dialout,docker your_username_here``` You may have to create the groups `dialout` and `docker`, using `groupad dialout` and `groupadd docker`
 #### Give User Sudo Access
-Run the command ```EDITOR=nano visudo```, then scroll to the line ```# %wheel ALL=(ALL) ALL```. then remove the ```# ``` and below that add the line, ```Default timestamp_timeout=500```. Then press CTRL+X, then type Y and press enter to exit.
+Run the command ```EDITOR=nano visudo```, then scroll to the line ```# %wheel ALL=(ALL) ALL```. then remove the ```# ``` and below that add the line, ```Defaults timestamp_timeout=500```. Then press CTRL+X, then type Y and press enter to exit.
 #### Setting System Language
 Run ```nano /etc/locale.gen```, the scroll to your langauge followed by some ```UTF-8```s. Remove the ```#``` in this line and save and exit like before.
 Then, run ```echo LANG=en_US.UTF-8 > /etc/locale.conf```, or replace ```en_US``` with your language.
@@ -73,26 +72,35 @@ Then save and exit the file.
 Run the command ```ln -sd /usr/share/zoneinfo/Australia/Sydney /etc/localtime```, but replace ```Australia/Sydney``` with your location. If you need to check, then after typing ```zoneinfo/``` press TAB on your keyboard and scroll. Repeat for after country, to find second location.
 Then run ```hwclock --systohc```.
 #### Grub UEFI Install
-Run the commands ```mkdir /boot/efi5 
-                    lsblk```
-Then run ```mount /dev/the_first_partition_in_the_list_here /boot/efi/```. Note this is not one of the partitions you created earlier, but THE FIRST one in the list.
+Run the commands
+```
+mkdir /efi
+lsblk
+```
+Then run ```mount /dev/the_first_partition_in_the_list_here /efi```. Note this is not one of the partitions you created earlier, but THE FIRST one in the list.
 Finally, run the command ```pacman -S grub efibootmgr dosfstools mtools os-prober```
 #### Configuring GRUB
 To enter the text file run ```nano /etc/default/grub```
 Then, scroll to the bottom and remove the ```#``` on the line ```#GRUB_DISABLE_OS_PROBER=false```
 Then, exit and save using ```Ctrl+x``` then typing ```y``` and clicking ```enter```.
 #### Finalising GRUB Install
-Run the command ```grub-install --target=x86_64-efi --bootloader-id=grub_uefi --recheck```
+Run the command ```grub-install --target=x86_64-efi --bootloader-id=grub_uefi --recheck --efi-directory /efi```
 Then, ```grub-mkconfig -o /boot/grub/grub.cfg```
 Hopefully, at this point grub will output something along the lines of ```Found Windows Boot Manager on /dev/etcetera/etcetera```
 My one, doesn't ever detect windows so this fails, but if it works for you, then that's great!
 #### Enabling Networking Services
-To enable networking services, you'll need a few commands ```systemctl enable --now dhcpcd
-systemctl enable --now NetworkManager```
+To enable networking services, you'll need a few commands
+```
+systemctl enable dhcpcd
+systemctl enable NetworkManager
+```
 #### Finishing Up
-To finish up (before installing the GUI), type ```exit
+To finish up (before installing the GUI), type
+```
+exit
 umount -lR /mnt
-reboot```
+reboot
+```
 #### Congratulations!
 Congratulations! You've done the bare minimum to get Arch Linux running with Windows as a backup operating system. Anyway, now you have to install a GUI, which there are many, many guides out there for, I personally reccomend GNOME, as it's my favourite in terms of look, feel, and community support. Happy hacking!
 
@@ -106,10 +114,11 @@ sudo systemctl enable --now gdm.service
 ```
 
 #### Freebie: My Recommended Software
+This is basically just for me, and I wouldn't recommend installing these, explore and install these by yourself.
 The following command installs snap, flatpak, yay (an AUR helper), 7zip, Chromium, docker, docker compose, ffmpeg, wget.
 Note that it is considered un-arch-linux-like to use an AUR help and you should probably learn how to use AUR manually yourself.
 
-```curl -fsSL https://raw.githubusercontent.com/mario872/arch-linux-dual-boot-setup/refs/heads/main/install-recimmended-software.sh | bash```
+```curl -fsSL https://raw.githubusercontent.com/mario872/arch-linux-dual-boot-setup/refs/heads/main/install-recommended-software.sh | bash```
 
 The following command installs Bambu Studio, Opera, dosfstools, ntfs-3g, esptool, visual studio code, gnome tweaks, gnome extensions, ollama, p3x onenote, teams for linux, thonny, wine, appimagelauncher, rasberry pi imager, kicad
 

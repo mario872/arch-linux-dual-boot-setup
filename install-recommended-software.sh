@@ -4,12 +4,13 @@ echo "## Installing YAY ##"
 sudo pacman -S --needed git base-devel  --noconfirm
 git clone https://aur.archlinux.org/yay.git
 cd yay
-makepkg -si
+yes | makepkg -si
 cd ..
 echo "## Yay was installed successfully ##"
 
 echo "## Installing Snap"
 yay -Sy snapd  --noconfirm --sudoloop
+sudo systemctl enable --now snapd.socket
 echo "## Snap was installed successfully ##"
 
 echo "## Installing Flatpak ##"
