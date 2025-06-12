@@ -114,7 +114,7 @@ sudo systemctl enable --now gdm.service
 ```
 
 #### Freebie: My Recommended Software
-This is basically just for me, and I wouldn't recommend installing these, explore and install these by yourself.
+This is basically just for me, and I wouldn't recommend installing these, explore and install these by yourself. Also, it is probably broken, because I only run this script every 6 months or so.
 The following command installs snap, flatpak, yay (an AUR helper), 7zip, Chromium, docker, docker compose, ffmpeg, wget.
 Note that it is considered un-arch-linux-like to use an AUR help and you should probably learn how to use AUR manually yourself.
 
