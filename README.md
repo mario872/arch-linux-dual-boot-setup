@@ -52,7 +52,7 @@ Run the command `arch-chroot /mnt`
 #### Setting root password
 To set the root password run the command ```passwd``` and follow the prompts to create the password.
 #### Adding Normal User
-Run the command ```useradd -m your_username_here```, then add the password with ```passwd your_username_here```. Now, to add the use to important groups run ```usermod -aG wheel,storage,power,dialout,docker your_username_here``` You may have to create the groups `dialout` and `docker`, using `groupad dialout` and `groupadd docker`
+Run the command ```useradd -m your_username_here```, then add the password with ```passwd your_username_here```. Now, to add the use to important groups run ```usermod -aG wheel,storage,power,dialout,uucp,docker your_username_here``` You may have to create the groups `dialout`, `uucp`, and `docker`, using `groupad dialout`, `groupadd uucp` and `groupadd docker`
 #### Give User Sudo Access
 Run the command ```EDITOR=nano visudo```, then scroll to the line ```# %wheel ALL=(ALL) ALL```. then remove the ```# ``` and below that add the line, ```Defaults timestamp_timeout=500```. Then press CTRL+X, then type Y and press enter to exit.
 #### Setting System Language
