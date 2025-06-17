@@ -21,7 +21,7 @@ sudo pacman -Sy gnome-tweaks gnome-extensions --noconfirm
 echo "## Gnome Tweaks and Gnome Extensions was installed successfully ##"
 
 echo "## Installing ollama ##"
-sudo pacman -Sy ollama --noconfirm
+curl -fsSL https://ollama.com/install.sh | sh
 echo "## Ollama was installed successfully ##"
 
 echo "## Installing p3x-onenote ##"
